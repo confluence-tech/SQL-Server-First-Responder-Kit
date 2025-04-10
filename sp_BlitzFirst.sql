@@ -2485,6 +2485,8 @@ If one of them is a lead blocker, consider killing that query.'' AS HowToStopit,
 		RAISERROR('Running CheckID 44',10,1) WITH NOWAIT;
 	END
 
+/*	
+
 	IF 20 >= (SELECT COUNT(*) FROM sys.databases WHERE name NOT IN ('master', 'model', 'msdb', 'tempdb'))
 		AND @Seconds > 0
 	BEGIN
@@ -2567,6 +2569,7 @@ If one of them is a lead blocker, consider killing that query.'' AS HowToStopit,
 			/* Set timeout back to a default value of -1 */
 			SET LOCK_TIMEOUT -1;
 		END;
+
 		
 		/* We mark timeout exceeded with a -1 so only show these IF there is statistics info that succeeded */
 		IF EXISTS (SELECT * FROM #UpdatedStats WHERE RowsForSorting > -1)
@@ -2587,6 +2590,8 @@ If one of them is a lead blocker, consider killing that query.'' AS HowToStopit,
 						FOR XML PATH(''));
 
 	END
+
+*/
 
     /* Potential Upcoming Problems - High Number of Connections - CheckID 49 */
 	IF (@Debug = 1)
