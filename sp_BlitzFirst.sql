@@ -39,7 +39,8 @@ ALTER PROCEDURE [dbo].[sp_BlitzFirst]
     @Debug BIT = 0,
 	@Version     VARCHAR(30) = NULL OUTPUT,
 	@VersionDate DATETIME = NULL OUTPUT,
-    @VersionCheckMode BIT = 0
+    @VersionCheckMode BIT = 0,
+	@CheckStatisticsUpdatedRecently bit = 0
     WITH EXECUTE AS CALLER, RECOMPILE
 AS
 BEGIN
@@ -2479,6 +2480,8 @@ If one of them is a lead blocker, consider killing that query.'' AS HowToStopit,
         END; /* IF @Seconds < 30 */
 
     /* Query Problems - Statistics Updated Recently - CheckID 44 */
+if @CheckStatisticsUpdatedRecently = 1
+begin
 	IF (@Debug = 1)
 	BEGIN
 		RAISERROR('Running CheckID 44',10,1) WITH NOWAIT;
@@ -2566,7 +2569,7 @@ If one of them is a lead blocker, consider killing that query.'' AS HowToStopit,
 			/* Set timeout back to a default value of -1 */
 			SET LOCK_TIMEOUT -1;
 		END;
-		
+end		
 		/* We mark timeout exceeded with a -1 so only show these IF there is statistics info that succeeded */
 		IF EXISTS (SELECT * FROM #UpdatedStats WHERE RowsForSorting > -1)
 			INSERT INTO #BlitzFirstResults (CheckID, Priority, FindingsGroup, Finding, URL, Details, HowToStopIt)
