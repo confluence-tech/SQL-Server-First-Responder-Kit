@@ -39,7 +39,8 @@ ALTER PROCEDURE [dbo].[sp_BlitzFirst]
     @Debug BIT = 0,
 	@Version     VARCHAR(30) = NULL OUTPUT,
 	@VersionDate DATETIME = NULL OUTPUT,
-    @VersionCheckMode BIT = 0
+    @VersionCheckMode BIT = 0,
+	@CheckStatisticsUpdatedRecently bit = 0
     WITH EXECUTE AS CALLER, RECOMPILE
 AS
 BEGIN
@@ -2485,7 +2486,8 @@ If one of them is a lead blocker, consider killing that query.'' AS HowToStopit,
 		RAISERROR('Running CheckID 44',10,1) WITH NOWAIT;
 	END
 
-/*	
+if @CheckStatisticsUpdatedRecently = 1
+Begin
 
 	IF 20 >= (SELECT COUNT(*) FROM sys.databases WHERE name NOT IN ('master', 'model', 'msdb', 'tempdb'))
 		AND @Seconds > 0
@@ -2591,7 +2593,7 @@ If one of them is a lead blocker, consider killing that query.'' AS HowToStopit,
 
 	END
 
-*/
+End
 
     /* Potential Upcoming Problems - High Number of Connections - CheckID 49 */
 	IF (@Debug = 1)
