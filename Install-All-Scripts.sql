@@ -35654,7 +35654,7 @@ BEGIN
 			/* We reuse this one by default rather than recreate it every time. */
 			CREATE TABLE ##WaitCategories
 			(
-				WaitType NVARCHAR(60) PRIMARY KEY CLUSTERED,
+				WaitType NVARCHAR(60) PRIMARY KEY CLUSTERED WITH (IGNORE_DUP_KEY = ON),
 				WaitCategory NVARCHAR(128) NOT NULL,
 				Ignorable BIT DEFAULT 0
 			);
