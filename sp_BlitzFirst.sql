@@ -39,7 +39,8 @@ ALTER PROCEDURE [dbo].[sp_BlitzFirst]
     @Debug BIT = 0,
 	@Version     VARCHAR(30) = NULL OUTPUT,
 	@VersionDate DATETIME = NULL OUTPUT,
-    @VersionCheckMode BIT = 0
+    @VersionCheckMode BIT = 0,
+	@CheckStatisticsUpdatedRecently bit = 0
     WITH EXECUTE AS CALLER, RECOMPILE
 AS
 BEGIN
@@ -512,7 +513,7 @@ BEGIN
 			/* We reuse this one by default rather than recreate it every time. */
 			CREATE TABLE ##WaitCategories
 			(
-				WaitType NVARCHAR(60) PRIMARY KEY CLUSTERED,
+				WaitType NVARCHAR(60) PRIMARY KEY CLUSTERED with(ignore_dup_key=on),
 				WaitCategory NVARCHAR(128) NOT NULL,
 				Ignorable BIT DEFAULT 0
 			);
@@ -2478,6 +2479,8 @@ If one of them is a lead blocker, consider killing that query.'' AS HowToStopit,
 		
         END; /* IF @Seconds < 30 */
 
+	if @CheckStatisticsUpdatedRecently = 1
+	begin
     /* Query Problems - Statistics Updated Recently - CheckID 44 */
 	IF (@Debug = 1)
 	BEGIN
@@ -2586,6 +2589,7 @@ If one of them is a lead blocker, consider killing that query.'' AS HowToStopit,
 						FOR XML PATH(''));
 
 	END
+	end
 
     /* Potential Upcoming Problems - High Number of Connections - CheckID 49 */
 	IF (@Debug = 1)
